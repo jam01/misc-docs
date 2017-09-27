@@ -95,7 +95,7 @@ The +descriptor.type+ value is used to determine whether the HTML element should
 "unsafe", HTML.FORM+++@+++method="post"
 "idempotent", HTML.FORM+++@+++method="post"^1^
 "semantic",HTML.SPAN|DIV|P|INPUT|LI|DT|DD|SECTION|...|FORM+++@+++method="get"^2^
-|===============================
+|=============================
 1. Since HTML does not support idempontent transitions, the HTML.FORM element with the +method="post"+ property SHOULD be used. Server implementors are encouraged to use an additional information in the transition in order to ensure idempotency of the request. Some examples are 1) adding a unique value to the URL in the +action+ property, 2) using an additional +INPUT+ element that holds a unique value used to enforce idempotency, etc.
 
 2. In some cases, servers MAY use a "safe" transition to express a +descriptor.type="semantic"+ element. For example, a server might represent a +computedResult+ as an +HTML.SPAN+ element,. However, if the result is not yet computed, the server may represent +computedResult+ as an +HTML.FORM+++@+++method="get"+ with one or more +HTML.INPUT+ elements allowing the client application to fill in values in order to generate the value +computedResult+.

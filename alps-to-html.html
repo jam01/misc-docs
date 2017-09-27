@@ -3,27 +3,24 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
-<meta name="generator" content="AsciiDoc 8.6.4" />
+<meta name="generator" content="AsciiDoc 8.6.8" />
 <title>ALPS Mapping Guidelines for HTML</title>
 <style type="text/css">
-/* Sans-serif font. */
+/* Shared CSS for AsciiDoc xhtml11 and html5 backends */
+
+/* Default font. */
+body {
+  font-family: Georgia,serif;
+}
+
+/* Title font. */
 h1, h2, h3, h4, h5, h6,
 div.title, caption.title,
 thead, p.table.header,
-div#toctitle,
-span#author, span#revnumber, span#revdate, span#revremark,
-div#footer {
+#toctitle,
+#author, #revnumber, #revdate, #revremark,
+#footer {
   font-family: Arial,Helvetica,sans-serif;
-}
-
-/* Serif font. */
-div.sectionbody {
-  font-family: Georgia,"Times New Roman",Times,serif;
-}
-
-/* Monospace font. */
-tt {
-  font-size: inherit;
 }
 
 body {
@@ -48,11 +45,6 @@ strong {
   color: #083194;
 }
 
-tt {
-  font-size: inherit;
-  color: navy;
-}
-
 h1, h2, h3, h4, h5, h6 {
   color: #527bbd;
   margin-top: 1.2em;
@@ -71,6 +63,9 @@ h3 {
 }
 h3 + * {
   clear: left;
+}
+h5 {
+  font-size: 1.0em;
 }
 
 div.sectionbody {
@@ -92,41 +87,45 @@ ul, ol, li > p {
 ul > li     { color: #aaa; }
 ul > li > * { color: black; }
 
-pre {
+.monospaced, code, pre {
+  font-family: "Courier New", Courier, monospace;
+  font-size: inherit;
+  color: navy;
   padding: 0;
   margin: 0;
 }
 
-span#author {
+
+#author {
   color: #527bbd;
   font-weight: bold;
   font-size: 1.1em;
 }
-span#email {
+#email {
 }
-span#revnumber, span#revdate, span#revremark {
+#revnumber, #revdate, #revremark {
 }
 
-div#footer {
+#footer {
   font-size: small;
   border-top: 2px solid silver;
   padding-top: 0.5em;
   margin-top: 4.0em;
 }
-div#footer-text {
+#footer-text {
   float: left;
   padding-bottom: 0.5em;
 }
-div#footer-badges {
+#footer-badges {
   float: right;
   padding-bottom: 0.5em;
 }
 
-div#preamble {
+#preamble {
   margin-top: 1.5em;
   margin-bottom: 1.5em;
 }
-div.tableblock, div.imageblock, div.exampleblock, div.verseblock,
+div.imageblock, div.exampleblock, div.verseblock,
 div.quoteblock, div.literalblock, div.listingblock, div.sidebarblock,
 div.admonitionblock {
   margin-top: 1.0em;
@@ -184,7 +183,7 @@ div.quoteblock, div.verseblock {
   margin-left: 1.0em;
   margin-right: 10%;
   border-left: 5px solid #f0f0f0;
-  color: #777777;
+  color: #888;
 }
 
 div.quoteblock > div.attribution {
@@ -267,35 +266,12 @@ div.compact div, div.compact div {
   margin-bottom: 0.1em;
 }
 
-div.tableblock > table {
-  border: 3px solid #527bbd;
-}
-thead, p.table.header {
-  font-weight: bold;
-  color: #527bbd;
-}
 tfoot {
   font-weight: bold;
 }
 td > div.verse {
   white-space: pre;
 }
-p.table {
-  margin-top: 0;
-}
-/* Because the table frame attribute is overriden by CSS in most browsers. */
-div.tableblock > table[frame="void"] {
-  border-style: none;
-}
-div.tableblock > table[frame="hsides"] {
-  border-left-style: none;
-  border-right-style: none;
-}
-div.tableblock > table[frame="vsides"] {
-  border-top-style: none;
-  border-bottom-style: none;
-}
-
 
 div.hdlist {
   margin-top: 0.8em;
@@ -362,14 +338,14 @@ div.colist td img {
 }
 
 @media print {
-  div#footer-badges { display: none; }
+  #footer-badges { display: none; }
 }
 
-div#toc {
+#toc {
   margin-bottom: 2.5em;
 }
 
-div#toctitle {
+#toctitle {
   color: #527bbd;
   font-size: 1.1em;
   font-weight: bold;
@@ -377,7 +353,7 @@ div#toctitle {
   margin-bottom: 0.1em;
 }
 
-div.toclevel1, div.toclevel2, div.toclevel3, div.toclevel4 {
+div.toclevel0, div.toclevel1, div.toclevel2, div.toclevel3, div.toclevel4 {
   margin-top: 0;
   margin-bottom: 0;
 }
@@ -430,10 +406,136 @@ span.yellow-background { background: yellow; }
 
 span.big { font-size: 2em; }
 span.small { font-size: 0.6em; }
+
+span.underline { text-decoration: underline; }
+span.overline { text-decoration: overline; }
+span.line-through { text-decoration: line-through; }
+
+div.unbreakable { page-break-inside: avoid; }
+
+
+/*
+ * xhtml11 specific
+ *
+ * */
+
+div.tableblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+div.tableblock > table {
+  border: 3px solid #527bbd;
+}
+thead, p.table.header {
+  font-weight: bold;
+  color: #527bbd;
+}
+p.table {
+  margin-top: 0;
+}
+/* Because the table frame attribute is overriden by CSS in most browsers. */
+div.tableblock > table[frame="void"] {
+  border-style: none;
+}
+div.tableblock > table[frame="hsides"] {
+  border-left-style: none;
+  border-right-style: none;
+}
+div.tableblock > table[frame="vsides"] {
+  border-top-style: none;
+  border-bottom-style: none;
+}
+
+
+/*
+ * html5 specific
+ *
+ * */
+
+table.tableblock {
+  margin-top: 1.0em;
+  margin-bottom: 1.5em;
+}
+thead, p.tableblock.header {
+  font-weight: bold;
+  color: #527bbd;
+}
+p.tableblock {
+  margin-top: 0;
+}
+table.tableblock {
+  border-width: 3px;
+  border-spacing: 0px;
+  border-style: solid;
+  border-color: #527bbd;
+  border-collapse: collapse;
+}
+th.tableblock, td.tableblock {
+  border-width: 1px;
+  padding: 4px;
+  border-style: solid;
+  border-color: #527bbd;
+}
+
+table.tableblock.frame-topbot {
+  border-left-style: hidden;
+  border-right-style: hidden;
+}
+table.tableblock.frame-sides {
+  border-top-style: hidden;
+  border-bottom-style: hidden;
+}
+table.tableblock.frame-none {
+  border-style: hidden;
+}
+
+th.tableblock.halign-left, td.tableblock.halign-left {
+  text-align: left;
+}
+th.tableblock.halign-center, td.tableblock.halign-center {
+  text-align: center;
+}
+th.tableblock.halign-right, td.tableblock.halign-right {
+  text-align: right;
+}
+
+th.tableblock.valign-top, td.tableblock.valign-top {
+  vertical-align: top;
+}
+th.tableblock.valign-middle, td.tableblock.valign-middle {
+  vertical-align: middle;
+}
+th.tableblock.valign-bottom, td.tableblock.valign-bottom {
+  vertical-align: bottom;
+}
+
+
+/*
+ * manpage specific
+ *
+ * */
+
+body.manpage h1 {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  border-top: 2px solid silver;
+  border-bottom: 2px solid silver;
+}
+body.manpage h2 {
+  border-style: none;
+}
+body.manpage div.sectionbody {
+  margin-left: 3em;
+}
+
+@media print {
+  body.manpage div#toc { display: none; }
+}
+
+
 </style>
 <script type="text/javascript">
 /*<![CDATA[*/
-window.onload = function(){asciidoc.footnotes(); asciidoc.toc(2);}
 var asciidoc = {  // Namespace.
 
 /////////////////////////////////////////////////////////////////////
@@ -475,7 +577,7 @@ toc: function (toclevels) {
 
   function tocEntries(el, toclevels) {
     var result = new Array;
-    var re = new RegExp('[hH]([2-'+(toclevels+1)+'])');
+    var re = new RegExp('[hH]([1-'+(toclevels+1)+'])');
     // Function that scans the DOM tree for header elements (the DOM2
     // nodeIterator API would be a better technique but not supported by all
     // browsers).
@@ -495,6 +597,25 @@ toc: function (toclevels) {
   }
 
   var toc = document.getElementById("toc");
+  if (!toc) {
+    return;
+  }
+
+  // Delete existing TOC entries in case we're reloading the TOC.
+  var tocEntriesToRemove = [];
+  var i;
+  for (i = 0; i < toc.childNodes.length; i++) {
+    var entry = toc.childNodes[i];
+    if (entry.nodeName.toLowerCase() == 'div'
+     && entry.getAttribute("class")
+     && entry.getAttribute("class").match(/^toclevel/))
+      tocEntriesToRemove.push(entry);
+  }
+  for (i = 0; i < tocEntriesToRemove.length; i++) {
+    toc.removeChild(tocEntriesToRemove[i]);
+  }
+
+  // Rebuild TOC entries.
   var entries = tocEntries(document.getElementById("content"), toclevels);
   for (var i = 0; i < entries.length; ++i) {
     var entry = entries[i];
@@ -522,24 +643,44 @@ toc: function (toclevels) {
  */
 
 footnotes: function () {
-  var cont = document.getElementById("content");
+  // Delete existing footnote entries in case we're reloading the footnodes.
+  var i;
   var noteholder = document.getElementById("footnotes");
+  if (!noteholder) {
+    return;
+  }
+  var entriesToRemove = [];
+  for (i = 0; i < noteholder.childNodes.length; i++) {
+    var entry = noteholder.childNodes[i];
+    if (entry.nodeName.toLowerCase() == 'div' && entry.getAttribute("class") == "footnote")
+      entriesToRemove.push(entry);
+  }
+  for (i = 0; i < entriesToRemove.length; i++) {
+    noteholder.removeChild(entriesToRemove[i]);
+  }
+
+  // Rebuild footnote entries.
+  var cont = document.getElementById("content");
   var spans = cont.getElementsByTagName("span");
   var refs = {};
   var n = 0;
   for (i=0; i<spans.length; i++) {
     if (spans[i].className == "footnote") {
       n++;
-      // Use [\s\S] in place of . so multi-line matches work.
-      // Because JavaScript has no s (dotall) regex flag.
-      note = spans[i].innerHTML.match(/\s*\[([\s\S]*)]\s*/)[1];
+      var note = spans[i].getAttribute("data-note");
+      if (!note) {
+        // Use [\s\S] in place of . so multi-line matches work.
+        // Because JavaScript has no s (dotall) regex flag.
+        note = spans[i].innerHTML.match(/\s*\[([\s\S]*)]\s*/)[1];
+        spans[i].innerHTML =
+          "[<a id='_footnoteref_" + n + "' href='#_footnote_" + n +
+          "' title='View footnote' class='footnote'>" + n + "</a>]";
+        spans[i].setAttribute("data-note", note);
+      }
       noteholder.innerHTML +=
         "<div class='footnote' id='_footnote_" + n + "'>" +
         "<a href='#_footnoteref_" + n + "' title='Return to text'>" +
         n + "</a>. " + note + "</div>";
-      spans[i].innerHTML =
-        "[<a id='_footnoteref_" + n + "' href='#_footnote_" + n +
-        "' title='View footnote' class='footnote'>" + n + "</a>]";
       var id =spans[i].getAttribute("id");
       if (id != null) refs["#"+id] = n;
     }
@@ -559,9 +700,32 @@ footnotes: function () {
       }
     }
   }
+},
+
+install: function(toclevels) {
+  var timerId;
+
+  function reinstall() {
+    asciidoc.footnotes();
+    if (toclevels) {
+      asciidoc.toc(toclevels);
+    }
+  }
+
+  function reinstallAndRemoveTimer() {
+    clearInterval(timerId);
+    reinstall();
+  }
+
+  timerId = setInterval(reinstall, 500);
+  if (document.addEventListener)
+    document.addEventListener("DOMContentLoaded", reinstallAndRemoveTimer, false);
+  else
+    window.onload = reinstallAndRemoveTimer;
 }
 
 }
+asciidoc.install();
 /*]]>*/
 </script>
 </head>
@@ -569,12 +733,8 @@ footnotes: function () {
 <div id="header">
 <h1>ALPS Mapping Guidelines for HTML</h1>
 <span id="author">Mike Amundsen</span><br />
-<span id="email"><tt>&lt;<a href="mailto:mca@mamund.com">mca@mamund.com</a>&gt;</tt></span><br />
+<span id="email"><code>&lt;<a href="mailto:mca@mamund.com">mca@mamund.com</a>&gt;</code></span><br />
 <span id="revdate">February 1, 2014</span>
-<div id="toc">
-  <div id="toctitle">Table of Contents</div>
-  <noscript><p><b>JavaScript must be enabled in your browser to display the table of contents.</b></p></noscript>
-</div>
 </div>
 <div id="content">
 <div class="sect1">
@@ -590,7 +750,7 @@ footnotes: function () {
 <div class="paragraph"><p>Since the aim is to support a wide set of use cases (clients, servers, run-time, design-time, etc.), ALPS profiles do not describe the runtime <em>behavior</em> of any single system. Instead ALPS profiles describe the problem domain boundaries (e.g. the possible data elements and possible state transitions). It is up to implementors to decide how they wish to use ALPS profliesin order to create an actual instance of a service or client application.</p></div>
 <div class="sect2">
 <h3 id="_servers_and_clients">Servers and Clients</h3>
-<div class="paragraph"><p>For server implementors, ALPS profiles establish the list of possible identifiers for data values (<tt>givenName</tt>, <tt>familyName</tt>, etc.) and transitions (<tt>publish</tt>, <tt>createUser</tt>, etc). ALPS profiles also provide additional description information for state transitions including whether the transition is <em>safe</em> or <em>idempotent</em> and, in some cases, whether there are any possible arguments that can be passed with each transition.</p></div>
+<div class="paragraph"><p>For server implementors, ALPS profiles establish the list of possible identifiers for data values (<code>givenName</code>, <code>familyName</code>, etc.) and transitions (<code>publish</code>, <code>createUser</code>, etc). ALPS profiles also provide additional description information for state transitions including whether the transition is <em>safe</em> or <em>idempotent</em> and, in some cases, whether there are any possible arguments that can be passed with each transition.</p></div>
 <div class="paragraph"><p>For client implementors can use the same ALPS document to as a guide for what to expect from a service which advertises support for an ALPS profile. For example, if a service announces that it uses the ALPS profile for microblogging, then any client application that was built to support the microblogging profile SHOULD be able to recongize all the important data elements and state transitions emitted by that service.</p></div>
 </div>
 </div>
@@ -605,26 +765,26 @@ Link Header
 </dt>
 <dd>
 <p>
-  Responses can include the <tt>Link</tt> header<a href="#2">[2]</a> with the <tt>href</tt> value set to the URL of the ALPS profile document and the <tt>rel</tt> value set to "profile."<br>
-  <tt>Link: <a href="http://alps.io/profiles/microblogging">http://alps.io/profiles/microblogging</a>; rel="profile"</tt>
+  Responses can include the <code>Link</code> header<a href="#2">[2]</a> with the <code>href</code> value set to the URL of the ALPS profile document and the <code>rel</code> value set to "profile."<br>
+  <code>Link: <a href="http://alps.io/profiles/microblogging">http://alps.io/profiles/microblogging</a>; rel="profile"</code>
 </p>
 </dd>
 <dt class="hdlist1">
-HTML4 <tt>profile</tt> attribute
+HTML4 <code>profile</code> attribute
 </dt>
 <dd>
 <p>
-  HTML4 documents can use the <tt>profile</tt> <a href="#3">[3]</a> attribute on the <tt>HTML.HEAD</tt> element. the <tt>profile</tt> attribute value SHOULD be set to the URL of the ALPS profile document.<br>
-  <tt>&lt;head profile="http://alps.io/profiles/microblogging"&gt;&#8230;&lt;/head&gt;</tt>
+  HTML4 documents can use the <code>profile</code> <a href="#3">[3]</a> attribute on the <code>HTML.HEAD</code> element. the <code>profile</code> attribute value SHOULD be set to the URL of the ALPS profile document.<br>
+  <code>&lt;head profile="http://alps.io/profiles/microblogging"&gt;&#8230;&lt;/head&gt;</code>
 </p>
 </dd>
 <dt class="hdlist1">
-HTML5 <tt>link</tt> element
+HTML5 <code>link</code> element
 </dt>
 <dd>
 <p>
-  HTML5 documents can use the <tt>Link</tt> element<a href="#4">[4]</a> with the <tt>href</tt> value set to the URL of the ALPS profile document and the <tt>rel</tt> value set to "profile."<br>
-  <tt>&lt;link href="http://alps.io/profiles/microblogging" rel="profile" /&gt;</tt>
+  HTML5 documents can use the <code>Link</code> element<a href="#4">[4]</a> with the <code>href</code> value set to the URL of the ALPS profile document and the <code>rel</code> value set to "profile."<br>
+  <code>&lt;link href="http://alps.io/profiles/microblogging" rel="profile" /&gt;</code>
 </p>
 </dd>
 </dl></div>
@@ -634,16 +794,16 @@ HTML5 <tt>link</tt> element
 <div class="title">Note</div>
 </td>
 <td class="content">
-<div class="paragraph"><p>It is valid for a service to advertise support for more than one ALPS profile for the same response. For example, a single response from a server might include the following <tt>LINK</tt> header:</p></div>
+<div class="paragraph"><p>It is valid for a service to advertise support for more than one ALPS profile for the same response. For example, a single response from a server might include the following <code>LINK</code> header:</p></div>
 <div class="listingblock">
 <div class="content">
-<pre><tt>LINK: &lt;http://alps.io/profiles/finance&gt;;rel="profile", &lt;http://alps.io/profiles/accounting&gt;;rel="profile"</tt></pre>
+<pre><code>LINK: &lt;http://alps.io/profiles/finance&gt;;rel="profile", &lt;http://alps.io/profiles/accounting&gt;;rel="profile"</code></pre>
 </div></div>
 <div class="paragraph"><p>In the above case, The client application has been informed that the response MAY contain data elements and state transitions from both the <em>finance</em> and the <em>accounting</em> ALPS profiles.</p></div>
 </td>
 </tr></table>
 </div>
-<div class="paragraph"><p>Clients accepting HTML responses SHOULD look for the ALPS profile in each of these places as appropriate to the response. If an ALPS profile reference appears in more than one location (e.g. <tt>LINK</tt> header, <tt>HTML.HEAD@profile</tt> attribute, and/or <tt>HTML.LINK</tt> element) <strong>all</strong> profiles SHOULD be considered valid.</p></div>
+<div class="paragraph"><p>Clients accepting HTML responses SHOULD look for the ALPS profile in each of these places as appropriate to the response. If an ALPS profile reference appears in more than one location (e.g. <code>LINK</code> header, <code>HTML.HEAD@profile</code> attribute, and/or <code>HTML.LINK</code> element) <strong>all</strong> profiles SHOULD be considered valid.</p></div>
 </div>
 </div>
 <div class="sect1">
@@ -651,12 +811,12 @@ HTML5 <tt>link</tt> element
 <div class="sectionbody">
 <div class="paragraph"><p>The following are the basic rules for rendering ALPS profile information into valid HTML representations.</p></div>
 <div class="sect2">
-<h3 id="_the_alps_tt_descriptor_id_tt_property">The ALPS <tt>descriptor.id</tt> property</h3>
-<div class="paragraph"><p>The <tt>ALPS.descriptor.id</tt> SHOULD be transformed into an HTML <tt>class</tt> property. Below are several valid examples:</p></div>
+<h3 id="_the_alps_code_descriptor_id_code_property">The ALPS <code>descriptor.id</code> property</h3>
+<div class="paragraph"><p>The <code>ALPS.descriptor.id</code> SHOULD be transformed into an HTML <code>class</code> property. Below are several valid examples:</p></div>
 <div class="listingblock">
-<div class="title">Applying <tt>descriptor.id</tt> to HTML elements</div>
+<div class="title">Applying <code>descriptor.id</code> to HTML elements</div>
 <div class="content">
-<pre><tt>&lt;!-- ALPS document --&gt;
+<pre><code>&lt;!-- ALPS document --&gt;
 &lt;descriptor id="abc" ... /&gt;
 
 &lt;!-- HTML read-only elements --&gt;
@@ -668,13 +828,13 @@ HTML5 <tt>link</tt> element
 &lt;!-- HTML state transition elements --&gt;
 &lt;input type="text" class="abc" /&gt;
 &lt;a href="..." class="abc" /&gt;
-&lt;img src="..." class="abc" /&gt;</tt></pre>
+&lt;img src="..." class="abc" /&gt;</code></pre>
 </div></div>
-<div class="paragraph"><p>The exception to this rule is when the ALPS <tt>descriptor.name</tt> property is present. In that case the <tt>class</tt> property of the HTML element should be set to the value of the <tt>descriptor.name</tt> property in the ALPS document. The ALPS <tt>descriptor.id</tt> SHOULD also be included in the HTML representation using an HTML5 Custom Data Attribute<a href="#1">[1]</a> <tt>data-alpsid</tt>. Below are several valid examples:</p></div>
+<div class="paragraph"><p>The exception to this rule is when the ALPS <code>descriptor.name</code> property is present. In that case the <code>class</code> property of the HTML element should be set to the value of the <code>descriptor.name</code> property in the ALPS document. The ALPS <code>descriptor.id</code> SHOULD also be included in the HTML representation using an HTML5 Custom Data Attribute<a href="#1">[1]</a> <code>data-alpsid</code>. Below are several valid examples:</p></div>
 <div class="listingblock">
-<div class="title">Applying <tt>descriptor.name</tt> to HTML elements</div>
+<div class="title">Applying <code>descriptor.name</code> to HTML elements</div>
 <div class="content">
-<pre><tt>&lt;!-- ALPS document --&gt;
+<pre><code>&lt;!-- ALPS document --&gt;
 &lt;descriptor id="abc" name="xyz" ... /&gt;
 &lt;descriptor id="abc2" name="xyz" ... /&gt;
 
@@ -685,12 +845,12 @@ HTML5 <tt>link</tt> element
 
 &lt;!-- HTML state transition elements --&gt;
 &lt;input type="text" class="xyz" data-alpsid="abc2"/&gt;
-&lt;a href="..." class="xyz" data-alpsid="abc"/&gt;</tt></pre>
+&lt;a href="..." class="xyz" data-alpsid="abc"/&gt;</code></pre>
 </div></div>
 </div>
 <div class="sect2">
-<h3 id="_the_alps_tt_descriptor_type_tt_property">The ALPS <tt>descriptor.type</tt> property</h3>
-<div class="paragraph"><p>The <tt>descriptor.type</tt> value is used to determine whether the HTML element should be rendered as a &#8216;value` element (e.g. <tt>span</tt>, <tt>input</tt>, etc.) or a `transition&#8217; element (e.g. <tt>form</tt>, <tt>a</tt>. <tt>img</tt>, etc.). Below is a table showing the various possibilities:</p></div>
+<h3 id="_the_alps_code_descriptor_type_code_property">The ALPS <code>descriptor.type</code> property</h3>
+<div class="paragraph"><p>The <code>descriptor.type</code> value is used to determine whether the HTML element should be rendered as a &#8216;value` element (e.g. <code>span</code>, <code>input</code>, etc.) or a `transition&#8217; element (e.g. <code>form</code>, <code>a</code>. <code>img</code>, etc.). Below is a table showing the various possibilities:</p></div>
 <div class="tableblock">
 <table rules="rows"
 width="100%"
@@ -700,7 +860,7 @@ cellspacing="0" cellpadding="4">
 <col width="50%" />
 <thead>
 <tr>
-<th align="left" valign="top"><tt>descriptor.type</tt> Value</th>
+<th align="left" valign="top"><code>descriptor.type</code> Value</th>
 <th align="left" valign="top">HTML Element</th>
 </tr>
 </thead>
@@ -727,12 +887,12 @@ cellspacing="0" cellpadding="4">
 <div class="olist arabic"><ol class="arabic">
 <li>
 <p>
-Since HTML does not support idempontent transitions, the HTML.FORM element with the <tt>method="post"</tt> property SHOULD be used. Server implementors are encouraged to use an additional information in the transition in order to ensure idempotency of the request. Some examples are 1) adding a unique value to the URL in the <tt>action</tt> property, 2) using an additional <tt>INPUT</tt> element that holds a unique value used to enforce idempotency, etc.
+Since HTML does not support idempontent transitions, the HTML.FORM element with the <code>method="post"</code> property SHOULD be used. Server implementors are encouraged to use an additional information in the transition in order to ensure idempotency of the request. Some examples are 1) adding a unique value to the URL in the <code>action</code> property, 2) using an additional <code>INPUT</code> element that holds a unique value used to enforce idempotency, etc.
 </p>
 </li>
 <li>
 <p>
-In some cases, servers MAY use a "safe" transition to express a <tt>descriptor.type="semantic"</tt> element. For example, a server might represent a <tt>computedResult</tt> as an <tt>HTML.SPAN</tt> element,. However, if the result is not yet computed, the server may represent <tt>computedResult</tt> as an <tt>HTML.FORM@method="get"</tt> with one or more <tt>HTML.INPUT</tt> elements allowing the client application to fill in values in order to generate the value <tt>computedResult</tt>.
+In some cases, servers MAY use a "safe" transition to express a <code>descriptor.type="semantic"</code> element. For example, a server might represent a <code>computedResult</code> as an <code>HTML.SPAN</code> element,. However, if the result is not yet computed, the server may represent <code>computedResult</code> as an <code>HTML.FORM@method="get"</code> with one or more <code>HTML.INPUT</code> elements allowing the client application to fill in values in order to generate the value <code>computedResult</code>.
 </p>
 </li>
 </ol></div>
@@ -748,7 +908,7 @@ In some cases, servers MAY use a "safe" transition to express a <tt>descriptor.t
 <div class="paragraph"><p>This is a very simple ALPS profile that defines a single semantic descriptor ("text") and a single safe descriptor ("search"). This profile describes the essence of the front end of any simple web-based search engine. Mapping this ALPS profile to an HTML4 document is rather straight-forward.</p></div>
 <div class="listingblock">
 <div class="content">
-<pre><tt>&lt;!-- ALPS Profile --&gt;
+<pre><code>&lt;!-- ALPS Profile --&gt;
 &lt;alps&gt;
   &lt;link rel="self" href="http://alps.io/profiles/search" /&gt; <b>&lt;1&gt;</b>
   &lt;descriptor id="text" type="semantic"&gt; <b>&lt;2&gt;</b>
@@ -765,7 +925,7 @@ In some cases, servers MAY use a "safe" transition to express a <tt>descriptor.t
       &lt;input type="submit" class="search" /&gt; <b>&lt;3&gt;</b>
     &lt;/form&gt;
   &lt;/body&gt;
-&lt;/html&gt;</tt></pre>
+&lt;/html&gt;</code></pre>
 </div></div>
 </div>
 <div class="sect2">
@@ -774,7 +934,7 @@ In some cases, servers MAY use a "safe" transition to express a <tt>descriptor.t
 <div class="listingblock">
 <div class="title">ALPS User Account Profile</div>
 <div class="content">
-<pre><tt>&lt;alps&gt;
+<pre><code>&lt;alps&gt;
   &lt;link rel="self" href="http://alps.io/profiles/useraccount" /&gt; <b>&lt;1&gt;</b>
 
   &lt;!-- data elements --&gt; <b>&lt;2&gt;</b>
@@ -797,12 +957,12 @@ In some cases, servers MAY use a "safe" transition to express a <tt>descriptor.t
   &lt;descriptor id="remove-link" type="safe" name="remove" /&gt; <b>&lt;11&gt;</b>
   &lt;descriptor id="remove-form" type="idempotent" name="remove" /&gt; <b>&lt;12&gt;</b>
 
-&lt;/alps&gt;</tt></pre>
+&lt;/alps&gt;</code></pre>
 </div></div>
 <div class="listingblock">
 <div class="title">HTML5 Representation of a list of users (with link to login and creating new accounts)</div>
 <div class="content">
-<pre><tt>&lt;html&gt;
+<pre><code>&lt;html&gt;
   &lt;head&gt;
     &lt;title&gt;User List&lt;/title&gt;
     &lt;link rel="profile" href="http://alps.io/profiles/useraccount" /&gt; <b>&lt;1&gt;</b>
@@ -827,14 +987,14 @@ In some cases, servers MAY use a "safe" transition to express a <tt>descriptor.t
       &lt;li&gt;&lt;a href="..." rel="item" class="detail"&gt;Michael&lt;/a&gt;&lt;/li&gt; <b>&lt;5&gt;</b>
     &lt;/ul&gt;
   &lt;/body&gt;
-&lt;/html&gt;</tt></pre>
+&lt;/html&gt;</code></pre>
 </div></div>
-<div class="paragraph"><p>In the above HTML5 example, the Menu section shows the use of the <tt>login-link</tt> and <tt>create-link</tt> ALPS decriptors applied to <tt>HTML.A</tt> elements that use the associated <tt>descriptor.name</tt> value for the HTML <tt>class</tt> value. Both these HTML anchors have the RECOMMENDED HTML5 Custom Data Attribute of <tt>data-alpsid</tt>.</p></div>
-<div class="paragraph"><p>The following HTML5 representation is an example of what might be returned when a client application activates the <tt>login-link</tt>:</p></div>
+<div class="paragraph"><p>In the above HTML5 example, the Menu section shows the use of the <code>login-link</code> and <code>create-link</code> ALPS decriptors applied to <code>HTML.A</code> elements that use the associated <code>descriptor.name</code> value for the HTML <code>class</code> value. Both these HTML anchors have the RECOMMENDED HTML5 Custom Data Attribute of <code>data-alpsid</code>.</p></div>
+<div class="paragraph"><p>The following HTML5 representation is an example of what might be returned when a client application activates the <code>login-link</code>:</p></div>
 <div class="listingblock">
 <div class="title">HTML5 Representation for creating a new user account.</div>
 <div class="content">
-<pre><tt>&lt;html&gt;
+<pre><code>&lt;html&gt;
   &lt;head&gt;
     &lt;title&gt;Create Account&lt;/title&gt;
     &lt;link rel="profile" href="http://alps.io/profiles/useraccount" /&gt; <b>&lt;1&gt;</b>
@@ -850,13 +1010,13 @@ In some cases, servers MAY use a "safe" transition to express a <tt>descriptor.t
       &lt;input type="submit" value="Save" class="create" data-alpsid="create-form" /&gt; <b>&lt;8&gt;</b>
     &lt;/form&gt;
   &lt;/body&gt;
-&lt;/html&gt;</tt></pre>
+&lt;/html&gt;</code></pre>
 </div></div>
-<div class="paragraph"><p>What follows is an HTML response that might be returned when activating a <tt>detail</tt> link:</p></div>
+<div class="paragraph"><p>What follows is an HTML response that might be returned when activating a <code>detail</code> link:</p></div>
 <div class="listingblock">
 <div class="title">HTML5 Representation for updating an existing user account.</div>
 <div class="content">
-<pre><tt>&lt;html&gt;
+<pre><code>&lt;html&gt;
   &lt;head&gt;
     &lt;title&gt;Update Account&lt;/title&gt;
     &lt;link rel="profile" href="http://alps.io/profiles/useraccount" /&gt; <b>&lt;1&gt;</b>
@@ -873,14 +1033,14 @@ In some cases, servers MAY use a "safe" transition to express a <tt>descriptor.t
       &lt;input type="submit" value="Save" class="update" data-alspid="update-form"/&gt; <b>&lt;10&gt;</b>
     &lt;/form&gt;
   &lt;/body&gt;
-&lt;/html&gt;</tt></pre>
+&lt;/html&gt;</code></pre>
 </div></div>
-<div class="paragraph"><p>Note that the <tt>&lt;input type="hidden" name="etag" &#8230; /&gt;</tt> (&lt;13&gt;) was added in the response (by the server) in order to ensure the <tt>HTML.FORM@method="post"</tt> transition can support idempotency as described in the ALPS profile (&lt;10&gt;). This is just one way for servers to ensure idempotency for HTML transitions. The implementation details are left to each service.</p></div>
+<div class="paragraph"><p>Note that the <code>&lt;input type="hidden" name="etag" &#8230; /&gt;</code> (&lt;13&gt;) was added in the response (by the server) in order to ensure the <code>HTML.FORM@method="post"</code> transition can support idempotency as described in the ALPS profile (&lt;10&gt;). This is just one way for servers to ensure idempotency for HTML transitions. The implementation details are left to each service.</p></div>
 <div class="paragraph"><p>The same approach is used to support an idempotent "remove" operation in this next HTML representation:</p></div>
 <div class="listingblock">
 <div class="title">HTML5 Representation for removing an existing user account.</div>
 <div class="content">
-<pre><tt>&lt;html&gt;
+<pre><code>&lt;html&gt;
   &lt;head profile="http://alps.io/profiles/useraccount"&gt; <b>&lt;1&gt;</b>
     &lt;title&gt;Remove Account&lt;/title&gt;
   &lt;/head&gt;
@@ -891,7 +1051,7 @@ In some cases, servers MAY use a "safe" transition to express a <tt>descriptor.t
       &lt;input type="submit" value="Remove" class="remove" data-alpsid="remove-form" /&gt; <b>&lt;12&gt;</b>
     &lt;/form&gt;
   &lt;/body&gt;
-&lt;/html&gt;</tt></pre>
+&lt;/html&gt;</code></pre>
 </div></div>
 </div>
 </div>
@@ -910,7 +1070,7 @@ In some cases, servers MAY use a "safe" transition to express a <tt>descriptor.t
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2014-01-28 18:36:18 EST
+Last updated 2017-09-26 23:00:41 EDT
 </div>
 </div>
 </body>
