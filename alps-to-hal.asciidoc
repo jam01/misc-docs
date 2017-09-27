@@ -1,0 +1,148 @@
+ALPS Mapping Guidelines for HAL
+================================
+:author: Jose Montoya
+:email: jamontoya01@gmail.com
+:corpname: Mountain State Software Solutions
+:revdate: September 24, 2017
+
+== Summary
+This document provides guidance on mapping ALPS descriptions to HAL representations. It is provided as a guide for those writing servers that will use ALPS profiles to generate HAL and for those writing client applications that will use ALPS profiles to "recognize" ALPS descriptors within the HAL document.
+
+== A Review of ALPS Principles
+The Application-Level Profile Semantic(ALPS)<<0,[0]>> specification is designed to describe the data elements and state transitions that make up a 'problem domain' (e.g. microblogging, accounting, etc.). ALPS documents are designed to be useful to both client and server implementors and can be used at both run-time and design-time to handle the generation and interpretation of response representations. ALPS description documents are referred to as 'profiles' or 'profile documents'.
+
+Since the aim is to support a wide set of use cases (clients, servers, run-time, design-time, etc.), ALPS profiles do not describe the runtime 'behavior' of any single system. Instead ALPS profiles describe the problem domain boundaries (e.g. the possible data elements and possible state transitions). It is up to implementors to decide how they wish to use ALPS profliesin order to create an actual instance of a service or client application.
+
+=== Servers and Clients
+For server implementors, ALPS profiles establish the list of possible identifiers for data values (+givenName+, +familyName+, etc.) and transitions (+publish+, +createUser+, etc). ALPS profiles also provide additional description information for state transitions including whether the transition is 'safe' or 'idempotent' and, in some cases, whether there are any possible arguments that can be passed with each transition. 
+
+For client implementors can use the same ALPS document to as a guide for what to expect from a service which advertises support for an ALPS profile. For example, if a service announces that it uses the ALPS profile for microblogging, then any client application that was built to support the microblogging profile SHOULD be able to recongize all the important data elements and state transitions emitted by that service.
+
+== Advertising ALPS Profiles for HAL Representations
+Servers returning HAL responses can advertise the ALPS profiles they support using the following methods:
+
+HAL +profile+ media type parameter::
+The +profile+ parameter<<1,[1]>> MAY be used on the appropriate HTTP header to facilitate content negotiation, ie. Content-Type, Accept; with the parameter value set to the URL of the ALPS profile document.
+----
+Content-Type: application/[json||xml]+hal; profile="http://alps.io/profiles/microblogging"
+----
+
+Profile Link Relation::
+Responses SHOULD include a +profile+ Link Relation with the +href+ value set to the URL of the ALPS profile document
+----
+{
+  "_links": { "profile": { "href" : "http://alps.io/profiles/microblogging" } }
+}
+----
+
+Link Header::
+  Responses MAY include the +Link+ header<<2,[2]>> with the +href+ value set to the URL of the ALPS profile document and the +rel+ value set to "profile."+++<br>+++
+  +Link: <http://alps.io/profiles/microblogging>; rel="profile"+
+
+[NOTE]
+====
+TODO: Describe which methods allow multiple profiles 
+====
+
+Clients accepting HAL responses SHOULD look for the ALPS profile in each of these places as appropriate to the response. If an ALPS profile reference appears in more than one location (e.g. Media Type +profile+ parameter, +LINK+ header, +HAL._links.profile+ 
+Link Relation) *all* profiles SHOULD be considered valid, with the Media Type parameter taking precedence.
+
+== Basic Mapping Rules for ALPS to HAL
+The following are the basic rules for rendering ALPS profile information into valid HAL representations.
+
+=== ALPS state transition descriptors:
+Decriptors with +Descriptor.type+ of SAFE, UNSAFE, and IDEMPOTENT SHOULD be transformed into  _links entries.
+
+==== The ALPS +descriptor.id+ property
+The +ALPS.descriptor.id+ SHOULD be transformed into the +key+ to the Link Object. Below are several possible scenarios:
+----
+<!-- descriptor.id is a IANA registered link relation>
+<!-- ALPS document -->
+<descriptor id="next" ... />
+
+{
+  "_links": { "next": { ... } }
+}
+----
+
+Custom link relations SHOULD resolve to the +Doc.value+ of the pertinent descriptor. Such a resource MAY be facilitated by the ALPS Public Repository hosting the ALPS document.
+----
+<!-- descriptor.id is a custom link relation -->
+<!-- ALPS document -->
+<descriptor id="performTransition" ... />
+
+{
+  "_links": { "http://apr.com/someAlps/docs/performTransition": { ... } }
+}
+----
+
+
+==== The HAL +curies+ relation type
+If the CURIEs syntax is to be used, the combination of +curies.href+ value and +rel+ name SHOULD be an URI<<4,[4]>><<5,[5]>> that resolves to a document as described previously.
+----
+{
+  "_links": {
+    "someAlps:performTransition": { ... },
+    "curies": [
+      {
+        "href": "http://apr.com/someAlps/docs/{rel}",
+        "name": "someAlps",
+        "templated": true
+      }
+    ]
+  }
+}
+----
+
+==== The HAL +LinkObject.type+ property
+The +HAL.LinkObject.type+ MAY be a resolvable complete URI<<3,[3]>> to an ALPS +descriptor+.
+----
+<!-- ALPS document -->
+<descriptor id="next" name="nextItem" ... />
+
+{
+  "_links": { "next": [ { ... },
+                        { "type": "http://apr.com/alps#next" }
+                      ] 
+            }
+}
+----
+
+[NOTE]
+====
+In cases where applying an ALPS document to a HAL representation results in a Link Relation whose value is an Link Object array, +type+ and +name+ properties become critical in providing semantic information to differentiate one Link Object from another within the same Link Relation.
+====
+
+
+==== The ALPS +descriptor.name+ property
+The +ALPS.descriptor.name+ MAY be transformed into the Link Object's name property.
+----
+<!-- ALPS document -->
+<descriptor id="next" name="nextItem" ... />
+
+{
+  "_links": { "next": { "name": "nextItem" } }
+}
+----
+
+
+=== ALPS semantic descriptor:
+TODO
+
+
+
+
+
+== References
+
+[[0]] 0. http://alps.io/spec
+
+[[1]] 1. https://tools.ietf.org/html/rfc6906#section-3.1
+
+[[2]] 2. https://tools.ietf.org/search/rfc5988#section-5
+
+[[3]] 3. https://tools.ietf.org/html/draft-amundsen-richardson-foster-alps-02#section-2.2.7.2
+
+[[4]] 4.  https://tools.ietf.org/html/draft-kelly-json-hal-08#section-8.2
+
+[[5]] 5.  https://tools.ietf.org/html/draft-michaud-xml-hal-01#section-8.2
