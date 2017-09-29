@@ -747,11 +747,11 @@ asciidoc.install();
 <h2 id="_a_review_of_alps_principles">A Review of ALPS Principles</h2>
 <div class="sectionbody">
 <div class="paragraph"><p>The Application-Level Profile Semantic(ALPS)<a href="#0">[0]</a> specification is designed to describe the data elements and state transitions that make up a <em>problem domain</em> (e.g. microblogging, accounting, etc.). ALPS documents are designed to be useful to both client and server implementors and can be used at both run-time and design-time to handle the generation and interpretation of response representations. ALPS description documents are referred to as <em>profiles</em> or <em>profile documents</em>.</p></div>
-<div class="paragraph"><p>Since the aim is to support a wide set of use cases (clients, servers, run-time, design-time, etc.), ALPS profiles do not describe the runtime <em>behavior</em> of any single system. Instead ALPS profiles describe the problem domain boundaries (e.g. the possible data elements and possible state transitions). It is up to implementors to decide how they wish to use ALPS profliesin order to create an actual instance of a service or client application.</p></div>
+<div class="paragraph"><p>Since the aim is to support a wide set of use cases (clients, servers, run-time, design-time, etc.), ALPS profiles do not describe the runtime <em>behavior</em> of any single system. Instead ALPS profiles describe the problem domain boundaries (e.g. the possible data elements and possible state transitions). It is up to implementors to decide how they wish to use ALPS proflies in order to create an actual instance of a service or client application.</p></div>
 <div class="sect2">
 <h3 id="_servers_and_clients">Servers and Clients</h3>
 <div class="paragraph"><p>For server implementors, ALPS profiles establish the list of possible identifiers for data values (<code>givenName</code>, <code>familyName</code>, etc.) and transitions (<code>publish</code>, <code>createUser</code>, etc). ALPS profiles also provide additional description information for state transitions including whether the transition is <em>safe</em> or <em>idempotent</em> and, in some cases, whether there are any possible arguments that can be passed with each transition.</p></div>
-<div class="paragraph"><p>For client implementors can use the same ALPS document to as a guide for what to expect from a service which advertises support for an ALPS profile. For example, if a service announces that it uses the ALPS profile for microblogging, then any client application that was built to support the microblogging profile SHOULD be able to recongize all the important data elements and state transitions emitted by that service.</p></div>
+<div class="paragraph"><p>For clients, implementors can use the same ALPS document as a guide for what to expect from a service which advertises support for an ALPS profile. For example, if a service announces that it uses the ALPS profile for microblogging, then any client application that was built to support the microblogging profile SHOULD be able to recongize all the important data elements and state transitions emitted by that service.</p></div>
 </div>
 </div>
 </div>
@@ -765,7 +765,7 @@ HAL <code>profile</code> media type parameter
 </dt>
 <dd>
 <p>
-The <code>profile</code> parameter<a href="#1">[1]</a> MAY be used on the appropriate HTTP header to facilitate content negotiation, ie. Content-Type, Accept; with the parameter value set to the URL of the ALPS profile document.
+The <code>profile</code> parameter<a href="#1">[1]</a> MAY be used on the <code>Content-Type</code> HTTP header, with the parameter value set to the URL of the ALPS profile document.
 </p>
 </dd>
 </dl></div>
@@ -773,6 +773,7 @@ The <code>profile</code> parameter<a href="#1">[1]</a> MAY be used on the approp
 <div class="content">
 <pre><code>Content-Type: application/[json||xml]+hal; profile="http://alps.io/profiles/microblogging"</code></pre>
 </div></div>
+<div class="paragraph"><p>Additionally, clients can use the same parameter on the <code>Accept</code> header to facilitate content negotiation.</p></div>
 <div class="dlist"><dl>
 <dt class="hdlist1">
 Profile Link Relation
@@ -806,7 +807,7 @@ Link Header
 <div class="title">Note</div>
 </td>
 <td class="content">
-<div class="paragraph"><p>TODO: Describe which methods allow multiple profiles</p></div>
+<div class="paragraph"><p>TODO: Talk about allowing multiple profiles</p></div>
 </td>
 </tr></table>
 </div>
@@ -820,10 +821,10 @@ Link Relation) <strong>all</strong> profiles SHOULD be considered valid, with th
 <div class="paragraph"><p>The following are the basic rules for rendering ALPS profile information into valid HAL representations.</p></div>
 <div class="sect2">
 <h3 id="_alps_state_transition_descriptors">ALPS state transition descriptors:</h3>
-<div class="paragraph"><p>Decriptors with <code>Descriptor.type</code> of SAFE, UNSAFE, and IDEMPOTENT SHOULD be transformed into  _links entries.</p></div>
+<div class="paragraph"><p>Decriptors with <code>type</code> of SAFE, UNSAFE, and IDEMPOTENT SHOULD be transformed into  _links entries.</p></div>
 <div class="sect3">
 <h4 id="_the_alps_code_descriptor_id_code_property">The ALPS <code>descriptor.id</code> property</h4>
-<div class="paragraph"><p>The <code>ALPS.descriptor.id</code> SHOULD be transformed into the <code>key</code> to the Link Object. Below are several possible scenarios:</p></div>
+<div class="paragraph"><p>The <code>ALPS.descriptor.id</code> SHOULD be transformed into the key or <code>rel</code> to a Link Object. Below are several possible scenarios:</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><code>&lt;!-- descriptor.id is a IANA registered link relation&gt;
@@ -867,7 +868,7 @@ Link Relation) <strong>all</strong> profiles SHOULD be considered valid, with th
 </div>
 <div class="sect3">
 <h4 id="_the_hal_code_linkobject_type_code_property">The HAL <code>LinkObject.type</code> property</h4>
-<div class="paragraph"><p>The <code>HAL.LinkObject.type</code> MAY be a resolvable complete URI<a href="#3">[3]</a> to an ALPS <code>descriptor</code>.</p></div>
+<div class="paragraph"><p>The <code>HAL.LinkObject.type</code> MAY be a complete and resolvable URI<a href="#3">[3]</a> to an ALPS <code>descriptor</code>.</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><code>&lt;!-- ALPS document --&gt;
@@ -875,7 +876,7 @@ Link Relation) <strong>all</strong> profiles SHOULD be considered valid, with th
 
 {
   "_links": { "next": [ { ... },
-                        { "type": "http://apr.com/alps#next" }
+                        { "type": "http://apr.com/someAlps#next" }
                       ]
             }
 }</code></pre>
@@ -886,14 +887,14 @@ Link Relation) <strong>all</strong> profiles SHOULD be considered valid, with th
 <div class="title">Note</div>
 </td>
 <td class="content">
-<div class="paragraph"><p>In cases where applying an ALPS document to a HAL representation results in a Link Relation whose value is an Link Object array, <code>type</code> and <code>name</code> properties become critical in providing semantic information to differentiate one Link Object from another within the same Link Relation.</p></div>
+<div class="paragraph"><p>In cases where applying an ALPS document to a HAL representation results in a Link Relation whose value is a Link Object array, <code>type</code> and <code>name</code> properties become critical in providing semantic information to differentiate one Link Object from another within the same Link Relation.</p></div>
 </td>
 </tr></table>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_the_alps_code_descriptor_name_code_property">The ALPS <code>descriptor.name</code> property</h4>
-<div class="paragraph"><p>The <code>ALPS.descriptor.name</code> MAY be transformed into the Link Object&#8217;s name property.</p></div>
+<h4 id="_the_hal_code_linkobject_name_code_property">The HAL <code>LinkObject.name</code> property</h4>
+<div class="paragraph"><p>The <code>HAL.LinkObject.name</code> MAY be transformed into the <code>descriptor.name</code> property.</p></div>
 <div class="listingblock">
 <div class="content">
 <pre><code>&lt;!-- ALPS document --&gt;
@@ -907,7 +908,52 @@ Link Relation) <strong>all</strong> profiles SHOULD be considered valid, with th
 </div>
 <div class="sect2">
 <h3 id="_alps_semantic_descriptor">ALPS semantic descriptor:</h3>
-<div class="paragraph"><p>TODO</p></div>
+<div class="paragraph"><p>Decriptors with <code>type</code> of SEMANTIC SHOULD be transformed into regular state properties as specified by the pertaining media type.</p></div>
+<div class="sect3">
+<h4 id="_the_alps_code_descriptor_id_code_property_2">The ALPS <code>descriptor.id</code> property</h4>
+<div class="paragraph"><p>The <code>ALPS.descriptor.id</code> SHOULD be transformed into the key of the property. Below are some possible scenarios:</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>&lt;!-- ALPS document --&gt;
+&lt;descriptor id="height"/&gt;
+
+{
+  "height": 180
+}</code></pre>
+</div></div>
+<div class="paragraph"><p>The value of such property will be in the appropriate format, as supported by the media type. In a case where the are SEMANTIC child descriptors, they SHOULD be presented as properties to the parent property, recursively, following the same rules.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>&lt;!-- ALPS document --&gt;
+&lt;descriptor id="height"&gt;
+  &lt;descriptor id="measurement"/&gt;
+  &lt;descriptor id="units"/&gt;
+&lt;/descriptor&gt;
+
+{
+  "height": { "measurement": 180,
+              "units": "cm" }
+}</code></pre>
+</div></div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_shortcomings_of_mapping_alps_to_hal">Shortcomings of Mapping ALPS to HAL</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>The following are some of the shortcomings when appplying a ALPS document to a HAL representation.</p></div>
+<div class="sect2">
+<h3 id="_semantic_descriptors_with_non_semantic_child_descriptors">Semantic descriptors with non-semantic child descriptors</h3>
+<div class="paragraph"><p>There is no way to present a semantic descriptor and include its state transitions. HAL defines state transitions for the root resource only.</p></div>
+</div>
+<div class="sect2">
+<h3 id="_http_method_to_use_when_dereferencing_non_semantic_descriptors_at_runtime">HTTP method to use when dereferencing non-semantic descriptors at runtime</h3>
+<div class="paragraph"><p>There is no appropriate way to present to the client the <code>desriptor.type</code> in order to hint the HTTP method to use when dereferencing the Link Object, or a way to communicate the HTTP method directly.</p></div>
+</div>
+<div class="sect2">
+<h3 id="_format_of_value_for_semantic_descriptors">Format of value for semantic descriptors</h3>
+<div class="paragraph"><p>In cases where the media type supports multiple formats for values to state properties, there is no way to communicate to the client what the expected format should be, ie. Json string vs Json number.</p></div>
 </div>
 </div>
 </div>
@@ -926,7 +972,7 @@ Link Relation) <strong>all</strong> profiles SHOULD be considered valid, with th
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-09-26 23:03:43 EDT
+Last updated 2017-09-28 20:31:31 EDT
 </div>
 </div>
 </body>

@@ -11,21 +11,22 @@ This document provides guidance on mapping ALPS descriptions to HAL representati
 == A Review of ALPS Principles
 The Application-Level Profile Semantic(ALPS)<<0,[0]>> specification is designed to describe the data elements and state transitions that make up a 'problem domain' (e.g. microblogging, accounting, etc.). ALPS documents are designed to be useful to both client and server implementors and can be used at both run-time and design-time to handle the generation and interpretation of response representations. ALPS description documents are referred to as 'profiles' or 'profile documents'.
 
-Since the aim is to support a wide set of use cases (clients, servers, run-time, design-time, etc.), ALPS profiles do not describe the runtime 'behavior' of any single system. Instead ALPS profiles describe the problem domain boundaries (e.g. the possible data elements and possible state transitions). It is up to implementors to decide how they wish to use ALPS profliesin order to create an actual instance of a service or client application.
+Since the aim is to support a wide set of use cases (clients, servers, run-time, design-time, etc.), ALPS profiles do not describe the runtime 'behavior' of any single system. Instead ALPS profiles describe the problem domain boundaries (e.g. the possible data elements and possible state transitions). It is up to implementors to decide how they wish to use ALPS proflies in order to create an actual instance of a service or client application.
 
 === Servers and Clients
 For server implementors, ALPS profiles establish the list of possible identifiers for data values (+givenName+, +familyName+, etc.) and transitions (+publish+, +createUser+, etc). ALPS profiles also provide additional description information for state transitions including whether the transition is 'safe' or 'idempotent' and, in some cases, whether there are any possible arguments that can be passed with each transition. 
 
-For client implementors can use the same ALPS document to as a guide for what to expect from a service which advertises support for an ALPS profile. For example, if a service announces that it uses the ALPS profile for microblogging, then any client application that was built to support the microblogging profile SHOULD be able to recongize all the important data elements and state transitions emitted by that service.
+For clients, implementors can use the same ALPS document as a guide for what to expect from a service which advertises support for an ALPS profile. For example, if a service announces that it uses the ALPS profile for microblogging, then any client application that was built to support the microblogging profile SHOULD be able to recongize all the important data elements and state transitions emitted by that service.
 
 == Advertising ALPS Profiles for HAL Representations
 Servers returning HAL responses can advertise the ALPS profiles they support using the following methods:
 
 HAL +profile+ media type parameter::
-The +profile+ parameter<<1,[1]>> MAY be used on the appropriate HTTP header to facilitate content negotiation, ie. Content-Type, Accept; with the parameter value set to the URL of the ALPS profile document.
+The +profile+ parameter<<1,[1]>> MAY be used on the +Content-Type+ HTTP header, with the parameter value set to the URL of the ALPS profile document.
 ----
 Content-Type: application/[json||xml]+hal; profile="http://alps.io/profiles/microblogging"
 ----
+Additionally, clients can use the same parameter on the +Accept+ header to facilitate content negotiation.
 
 Profile Link Relation::
 Responses SHOULD include a +profile+ Link Relation with the +href+ value set to the URL of the ALPS profile document
@@ -41,7 +42,7 @@ Link Header::
 
 [NOTE]
 ====
-TODO: Describe which methods allow multiple profiles 
+TODO: Talk about allowing multiple profiles 
 ====
 
 Clients accepting HAL responses SHOULD look for the ALPS profile in each of these places as appropriate to the response. If an ALPS profile reference appears in more than one location (e.g. Media Type +profile+ parameter, +LINK+ header, +HAL._links.profile+ 
@@ -51,10 +52,10 @@ Link Relation) *all* profiles SHOULD be considered valid, with the Media Type pa
 The following are the basic rules for rendering ALPS profile information into valid HAL representations.
 
 === ALPS state transition descriptors:
-Decriptors with +Descriptor.type+ of SAFE, UNSAFE, and IDEMPOTENT SHOULD be transformed into  _links entries.
+Decriptors with +type+ of SAFE, UNSAFE, and IDEMPOTENT SHOULD be transformed into  _links entries.
 
 ==== The ALPS +descriptor.id+ property
-The +ALPS.descriptor.id+ SHOULD be transformed into the +key+ to the Link Object. Below are several possible scenarios:
+The +ALPS.descriptor.id+ SHOULD be transformed into the key or +rel+ to a Link Object. Below are several possible scenarios:
 ----
 <!-- descriptor.id is a IANA registered link relation>
 <!-- ALPS document -->
@@ -95,14 +96,14 @@ If the CURIEs syntax is to be used, the combination of +curies.href+ value and +
 ----
 
 ==== The HAL +LinkObject.type+ property
-The +HAL.LinkObject.type+ MAY be a resolvable complete URI<<3,[3]>> to an ALPS +descriptor+.
+The +HAL.LinkObject.type+ MAY be a complete and resolvable URI<<3,[3]>> to an ALPS +descriptor+.
 ----
 <!-- ALPS document -->
 <descriptor id="next" name="nextItem" ... />
 
 {
   "_links": { "next": [ { ... },
-                        { "type": "http://apr.com/alps#next" }
+                        { "type": "http://apr.com/someAlps#next" }
                       ] 
             }
 }
@@ -110,12 +111,12 @@ The +HAL.LinkObject.type+ MAY be a resolvable complete URI<<3,[3]>> to an ALPS +
 
 [NOTE]
 ====
-In cases where applying an ALPS document to a HAL representation results in a Link Relation whose value is an Link Object array, +type+ and +name+ properties become critical in providing semantic information to differentiate one Link Object from another within the same Link Relation.
+In cases where applying an ALPS document to a HAL representation results in a Link Relation whose value is a Link Object array, +type+ and +name+ properties become critical in providing semantic information to differentiate one Link Object from another within the same Link Relation.
 ====
 
 
-==== The ALPS +descriptor.name+ property
-The +ALPS.descriptor.name+ MAY be transformed into the Link Object's name property.
+==== The HAL +LinkObject.name+ property
+The +HAL.LinkObject.name+ MAY be transformed into the +descriptor.name+ property.
 ----
 <!-- ALPS document -->
 <descriptor id="next" name="nextItem" ... />
@@ -127,8 +128,44 @@ The +ALPS.descriptor.name+ MAY be transformed into the Link Object's name proper
 
 
 === ALPS semantic descriptor:
-TODO
+Decriptors with +type+ of SEMANTIC SHOULD be transformed into regular state properties as specified by the pertaining media type.
 
+==== The ALPS +descriptor.id+ property
+The +ALPS.descriptor.id+ SHOULD be transformed into the key of the property. Below are some possible scenarios:
+----
+<!-- ALPS document -->
+<descriptor id="height"/>
+
+{
+  "height": 180
+}
+----
+
+The value of such property will be in the appropriate format, as supported by the media type. In a case where the are SEMANTIC child descriptors, they SHOULD be presented as properties to the parent property, recursively, following the same rules.
+----
+<!-- ALPS document -->
+<descriptor id="height">
+  <descriptor id="measurement"/>
+  <descriptor id="units"/>
+</descriptor>
+
+{
+  "height": { "measurement": 180, 
+              "units": "cm" }
+}
+----
+
+== Shortcomings of Mapping ALPS to HAL
+The following are some of the shortcomings when appplying a ALPS document to a HAL representation.
+
+=== Semantic descriptors with non-semantic child descriptors
+There is no way to present a semantic descriptor and include its state transitions. HAL defines state transitions for the root resource only.
+
+=== HTTP method to use when dereferencing non-semantic descriptors at runtime
+There is no appropriate way to present to the client the +desriptor.type+ in order to hint the HTTP method to use when dereferencing the Link Object, or a way to communicate the HTTP method directly.
+
+=== Format of value for semantic descriptors
+In cases where the media type supports multiple formats for values to state properties, there is no way to communicate to the client what the expected format should be, ie. Json string vs Json number.
 
 
 
