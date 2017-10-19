@@ -168,7 +168,180 @@ There is no appropriate way to present to the client the +desriptor.type+ in ord
 In cases where the media type supports multiple formats for values to state properties, there is no way to communicate to the client what the expected format should be, ie. Json string vs Json number.
 
 
+== Mapping Examples
+Below are some examples to use as guides when mapping between ALPS and HAL.
 
+=== Search Example
+This is a very simple ALPS profile that defines a single semantic descriptor ("text") and a single safe descriptor ("search"). This profile describes the essence of the front end of any simple web-based search engine. Mapping this ALPS profile to an HAL+JSON document is rather straight-forward.
+
+----
+<!-- ALPS Profile -->
+<alps>
+  <link rel="self" href="http://alps.io/profiles/search" /> <1>
+  <descriptor id="search" type="safe">
+    <descriptor id="text" type="semantic"/>
+  </descriptor>
+</alps>
+
+<!-- HAL+JSON representation -->
+{
+  "_links": {
+    "profile": {
+      "href": "http://apr.com/search"
+    },
+    "search": {
+      "href": "",
+      "type": "http://apr.com/search#search"
+    },
+    "curies": [
+      {
+        "href": "http://apr.com/search/docs/{rel}",
+        "name": "someAlps",
+        "templated": true
+      }
+    ]
+  }
+}
+----
+
+=== User Account Example
+This example shows an ALPS profile that describes both reading and writing operations on a user account. It is also structured as a `flat' ALPS document. The profile does not constrain any server implementations to specific parameters for transitions; each server can select the data elements that best fit that server's use cases.
+
+.ALPS User Account Profile
+----
+<alps>
+  <link rel="self" href="http://apr.com/useraccount" /> <1>
+  
+  <descriptor id="list" type="safe" rt="#user/>
+  <descriptor id="create" type="unsafe" href="#user"/>
+  <descriptor id="login" type="idempotent">
+    <descriptor type="semantic" id="username"/>
+    <descriptor type="semantic" id="password"/>
+  </descriptor>
+
+  <descriptor id="user" type="semantic">
+    <descriptor id="accessCode" type="semantic"/>
+    <descriptor id="givenName" type="semantic"/>
+    <descriptor id="familyName" type="semantic"/>
+    <descriptor id="email" type="semantic"/>
+    <descriptor id="telephone" type="semantic"/>
+    <descriptor id="update" type="idempotent"/>
+    <descriptor id="remove" type="idempotent"/>
+  </descriptor>
+
+</alps>
+----
+
+.HAL+JSON Representation of main resource with affordances to login, list existing accounts, or create a new account
+----
+{
+  "_links": {
+    "profile": {
+      "href": "http://apr.com/useraccount"
+    },
+    "userAcc:list": {
+      "href": "...",
+      "type": "http://apr.com/useraccount#list"
+    },
+    "userAcc:login": {
+      "href": "...",
+      "type": "http://apr.com/useraccount#login"
+    },
+    "userAcc:create": {
+      "href": "...",
+      "type": "http://apr.com/useraccount#create"
+    },
+    "curies": [
+      {
+        "href": "http://apr.com/useraccount/docs/{rel}",
+        "name": "userAcc",
+        "templated": true
+      }
+    ]
+  }
+}
+----
+In the above HAL+JSON example, the main resource shows the use of the +login+ and +create+ ALPS decriptors applied to +HAL._links+
+
+The following HAL+JSON representation is an example of what might be returned when a client application activates the +list+:
+      
+.JSON Representation
+----
+{
+  "_links": {
+    "profile": {
+      "href": "http://apr.com/useraccount"
+    },
+    "self": {
+      "href": "...",
+      "type": "http://apr.com/useraccount#list"
+    }
+  },
+  "_embedded": {
+    "item": [
+      {
+        "_links": {
+          "self": {
+            "href": "..."
+          },
+          "userAcc:update": {
+            "href": "...",
+            "type": "http://apr.com/useraccount#update"
+          },
+          "userAcc:remove": {
+            "href": "...",
+            "type": "http://apr.com/useraccount#remove"
+          }
+        }
+      }
+    ],
+    "curies": [
+      {
+        "href": "http://apr.com/useraccount/docs/{rel}",
+        "name": "userAcc",
+        "templated": true
+      }
+    ]
+  }
+}
+----
+
+The following HAL+JSON representation is an example of what might be returned when a client application activates the +item.self+:
+      
+.JSON Representation
+----
+{
+  "_links": {
+    "profile": {
+      "href": "http://apr.com/useraccount"
+    },
+    "self": {
+      "href": "...",
+      "type": "http://apr.com/useraccount#user"
+    },
+    "userAcc:update": {
+      "href": "...",
+      "type": "http://apr.com/useraccount#update"
+    },
+    "userAcc:remove": {
+      "href": "...",
+      "type": "http://apr.com/useraccount#remove"
+    },
+    "curies": [
+      {
+        "href": "http://apr.com/useraccount/docs/{rel}",
+        "name": "userAcc",
+        "templated": true
+      }
+    ]
+  },
+  "accessCode": "",
+  "givenName": "",
+  "familyName": "",
+  "email": "",
+  "telephone": ""
+}
+----
 
 == References
 

@@ -958,6 +958,184 @@ Link Relation) <strong>all</strong> profiles SHOULD be considered valid, with th
 </div>
 </div>
 <div class="sect1">
+<h2 id="_mapping_examples">Mapping Examples</h2>
+<div class="sectionbody">
+<div class="paragraph"><p>Below are some examples to use as guides when mapping between ALPS and HAL.</p></div>
+<div class="sect2">
+<h3 id="_search_example">Search Example</h3>
+<div class="paragraph"><p>This is a very simple ALPS profile that defines a single semantic descriptor ("text") and a single safe descriptor ("search"). This profile describes the essence of the front end of any simple web-based search engine. Mapping this ALPS profile to an HAL+JSON document is rather straight-forward.</p></div>
+<div class="listingblock">
+<div class="content">
+<pre><code>&lt;!-- ALPS Profile --&gt;
+&lt;alps&gt;
+  &lt;link rel="self" href="http://alps.io/profiles/search" /&gt; <b>&lt;1&gt;</b>
+  &lt;descriptor id="search" type="safe"&gt;
+    &lt;descriptor id="text" type="semantic"/&gt;
+  &lt;/descriptor&gt;
+&lt;/alps&gt;
+
+&lt;!-- HAL+JSON representation --&gt;
+{
+  "_links": {
+    "profile": {
+      "href": "http://apr.com/search"
+    },
+    "search": {
+      "href": "",
+      "type": "http://apr.com/search#search"
+    },
+    "curies": [
+      {
+        "href": "http://apr.com/search/docs/{rel}",
+        "name": "someAlps",
+        "templated": true
+      }
+    ]
+  }
+}</code></pre>
+</div></div>
+</div>
+<div class="sect2">
+<h3 id="_user_account_example">User Account Example</h3>
+<div class="paragraph"><p>This example shows an ALPS profile that describes both reading and writing operations on a user account. It is also structured as a &#8216;flat&#8217; ALPS document. The profile does not constrain any server implementations to specific parameters for transitions; each server can select the data elements that best fit that server&#8217;s use cases.</p></div>
+<div class="listingblock">
+<div class="title">ALPS User Account Profile</div>
+<div class="content">
+<pre><code>&lt;alps&gt;
+  &lt;link rel="self" href="http://apr.com/useraccount" /&gt; <b>&lt;1&gt;</b>
+
+  &lt;descriptor id="list" type="safe" rt="#user/&gt;
+  &lt;descriptor id="create" type="unsafe" href="#user"/&gt;
+  &lt;descriptor id="login" type="idempotent"&gt;
+    &lt;descriptor type="semantic" id="username"/&gt;
+    &lt;descriptor type="semantic" id="password"/&gt;
+  &lt;/descriptor&gt;
+
+  &lt;descriptor id="user" type="semantic"&gt;
+    &lt;descriptor id="accessCode" type="semantic"/&gt;
+    &lt;descriptor id="givenName" type="semantic"/&gt;
+    &lt;descriptor id="familyName" type="semantic"/&gt;
+    &lt;descriptor id="email" type="semantic"/&gt;
+    &lt;descriptor id="telephone" type="semantic"/&gt;
+    &lt;descriptor id="update" type="idempotent"/&gt;
+    &lt;descriptor id="remove" type="idempotent"/&gt;
+  &lt;/descriptor&gt;
+
+&lt;/alps&gt;</code></pre>
+</div></div>
+<div class="listingblock">
+<div class="title">HAL+JSON Representation of main resource with affordances to login, list existing accounts, or create a new account</div>
+<div class="content">
+<pre><code>{
+  "_links": {
+    "profile": {
+      "href": "http://apr.com/useraccount"
+    },
+    "userAcc:list": {
+      "href": "...",
+      "type": "http://apr.com/useraccount#list"
+    },
+    "userAcc:login": {
+      "href": "...",
+      "type": "http://apr.com/useraccount#login"
+    },
+    "userAcc:create": {
+      "href": "...",
+      "type": "http://apr.com/useraccount#create"
+    },
+    "curies": [
+      {
+        "href": "http://apr.com/useraccount/docs/{rel}",
+        "name": "userAcc",
+        "templated": true
+      }
+    ]
+  }
+}</code></pre>
+</div></div>
+<div class="paragraph"><p>In the above HAL+JSON example, the main resource shows the use of the <code>login</code> and <code>create</code> ALPS decriptors applied to <code>HAL._links</code></p></div>
+<div class="paragraph"><p>The following HAL+JSON representation is an example of what might be returned when a client application activates the <code>list</code>:</p></div>
+<div class="listingblock">
+<div class="title">JSON Representation</div>
+<div class="content">
+<pre><code>{
+  "_links": {
+    "profile": {
+      "href": "http://apr.com/useraccount"
+    },
+    "self": {
+      "href": "...",
+      "type": "http://apr.com/useraccount#list"
+    }
+  },
+  "_embedded": {
+    "item": [
+      {
+        "_links": {
+          "self": {
+            "href": "..."
+          },
+          "userAcc:update": {
+            "href": "...",
+            "type": "http://apr.com/useraccount#update"
+          },
+          "userAcc:remove": {
+            "href": "...",
+            "type": "http://apr.com/useraccount#remove"
+          }
+        }
+      }
+    ],
+    "curies": [
+      {
+        "href": "http://apr.com/useraccount/docs/{rel}",
+        "name": "userAcc",
+        "templated": true
+      }
+    ]
+  }
+}</code></pre>
+</div></div>
+<div class="paragraph"><p>The following HAL+JSON representation is an example of what might be returned when a client application activates the <code>item.self</code>:</p></div>
+<div class="listingblock">
+<div class="title">JSON Representation</div>
+<div class="content">
+<pre><code>{
+  "_links": {
+    "profile": {
+      "href": "http://apr.com/useraccount"
+    },
+    "self": {
+      "href": "...",
+      "type": "http://apr.com/useraccount#user"
+    },
+    "userAcc:update": {
+      "href": "...",
+      "type": "http://apr.com/useraccount#update"
+    },
+    "userAcc:remove": {
+      "href": "...",
+      "type": "http://apr.com/useraccount#remove"
+    },
+    "curies": [
+      {
+        "href": "http://apr.com/useraccount/docs/{rel}",
+        "name": "userAcc",
+        "templated": true
+      }
+    ]
+  },
+  "accessCode": "",
+  "givenName": "",
+  "familyName": "",
+  "email": "",
+  "telephone": ""
+}</code></pre>
+</div></div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_references">References</h2>
 <div class="sectionbody">
 <div class="paragraph"><p><a id="0"></a> 0. <a href="http://alps.io/spec">http://alps.io/spec</a></p></div>
@@ -972,7 +1150,7 @@ Link Relation) <strong>all</strong> profiles SHOULD be considered valid, with th
 <div id="footnotes"><hr /></div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-09-28 20:31:31 EDT
+Last updated 2017-10-19 17:03:19 CDT
 </div>
 </div>
 </body>
